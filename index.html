@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>希洛 · 夜雨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700&family=Noto+Serif+SC:wght@600&family=ZCOOL+QingKe+HuangYou&family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
+        "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.4.2/lib/three-vrm.module.min.js"
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --ink: #eef9fa;
+      --dim: rgba(220, 244, 248, 0.72);
+      --night: #0b2130;
+      --cyan: #1fc3d8;
+    }
+    html, body { margin: 0; height: 100%; background: var(--night); overflow: hidden; color: var(--ink); }
+    canvas { display: block; touch-action: none; cursor: grab; }
+    canvas:active { cursor: grabbing; }
+
+    #intro {
+      position: fixed; inset: 0; display: grid; place-items: center; text-align: center;
+      background: radial-gradient(ellipse at 50% 55%, rgba(18, 58, 76, 0.55), rgba(5, 16, 24, 0.97) 72%);
+      transition: opacity 2.4s ease, visibility 2.4s;
+      font-family: 'Noto Sans SC', sans-serif; user-select: none;
+    }
+    #intro.gone { opacity: 0; visibility: hidden; }
+    #intro h1 {
+      font-weight: 300; font-size: clamp(34px, 7vw, 64px); letter-spacing: 0.6em; margin: 0 0 0 0.6em;
+      text-shadow: 0 0 18px rgba(31, 195, 216, 0.7), 0 0 2px #fff;
+    }
+    #intro .en { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.55em; color: var(--dim); margin-top: 16px; font-size: 14px; }
+    #intro .go { margin-top: 52px; font-size: 13px; letter-spacing: 0.45em; color: var(--dim); opacity: 0; transition: opacity 1.2s; }
+    #intro.ready { cursor: pointer; }
+    #intro.ready .go { opacity: 1; animation: breathe 3.2s ease-in-out infinite; }
+    #status { margin-top: 52px; font-size: 13px; letter-spacing: 0.3em; color: var(--dim); min-height: 1em; }
+    #intro.ready #status { display: none; }
+    @keyframes breathe { 50% { opacity: 0.35; } }
+
+    #hint, #mode {
+      position: fixed; left: 24px; font-family: 'Noto Sans SC', sans-serif; font-size: 12px; letter-spacing: 0.2em;
+      color: var(--dim); pointer-events: none; text-shadow: 0 0 6px rgba(0, 20, 30, 0.9);
+    }
+    #hint { bottom: 48px; opacity: 0; transition: opacity 2s; line-height: 2; }
+    #hint.show { opacity: 1; }
+    #mode { bottom: 22px; opacity: 0.55; }
+    #chips { position: fixed; right: 24px; bottom: 18px; display: flex; gap: 8px; }
+    /* 长夏乐馆's music, to choose between, shown near it */
+    #concert {
+      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; gap: 8px; align-items: center;
+      font: 12px 'Noto Sans SC', sans-serif; letter-spacing: 0.2em; color: var(--dim); text-shadow: 0 0 6px rgba(0, 20, 30, 0.9);
+      opacity: 0; visibility: hidden; transition: opacity 1.2s, visibility 1.2s;
+    }
+    #concert.show { opacity: 1; visibility: visible; }
+    #concert button {
+      font: 13px 'Noto Sans SC', sans-serif; letter-spacing: 0.15em; color: var(--dim); background: rgba(5, 20, 30, 0.35);
+      border: 1px solid rgba(31, 195, 216, 0.3); border-radius: 999px; padding: 5px 12px; cursor: pointer; opacity: 0.7;
+    }
+    #concert button.on { opacity: 1; border-color: rgba(238, 249, 250, 0.85); color: var(--ink); }
+    #chips button {
+      font: 13px 'Noto Sans SC', sans-serif; letter-spacing: 0.15em;
+      color: var(--dim); background: rgba(5, 20, 30, 0.35); border: 1px solid rgba(31, 195, 216, 0.45); border-radius: 999px;
+      padding: 5px 12px; cursor: pointer; opacity: 0.75; transition: opacity 0.4s, border-color 0.4s;
+    }
+    #chips button:hover, #chips button:focus-visible { opacity: 1; border-color: rgba(238, 249, 250, 0.8); }
+    /* the sliders over the chips: how fast one walks, how loud the music */
+    #sliders {
+      position: fixed; right: 24px; bottom: 56px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+      font: 12px 'Noto Sans SC', sans-serif; letter-spacing: 0.2em; color: var(--dim); text-shadow: 0 0 6px rgba(0, 20, 30, 0.9);
+      opacity: 0.75; transition: opacity 0.4s;
+    }
+    #sliders:hover, #sliders:focus-within { opacity: 1; }
+    #sliders label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    #sliders [hidden] { display: none; }
+    #sliders input {
+      -webkit-appearance: none; appearance: none; width: 118px; height: 2px; margin: 6px 0; border-radius: 2px;
+      background: rgba(31, 195, 216, 0.45); cursor: pointer; outline: none;
+    }
+    #sliders input::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--night);
+      border: 1px solid var(--ink); box-shadow: 0 0 6px rgba(31, 195, 216, 0.8);
+    }
+    #sliders input::-moz-range-thumb {
+      width: 12px; height: 12px; border-radius: 50%; background: var(--night); border: 1px solid var(--ink); box-shadow: 0 0 6px rgba(31, 195, 216, 0.8);
+    }
+    /* the credits: a ⋯ button at the top right, opening the list of what the city draws on */
+    #more {
+      position: fixed; top: 16px; right: 20px; width: 34px; height: 34px; border-radius: 50%; padding: 0;
+      font: 18px/1 'Noto Sans SC', sans-serif; letter-spacing: 0; color: var(--dim); background: rgba(5, 20, 30, 0.35);
+      border: 1px solid rgba(31, 195, 216, 0.45); cursor: pointer; opacity: 0.75; transition: opacity 0.4s, border-color 0.4s;
+    }
+    #more:hover, #more:focus-visible, #more[aria-expanded="true"] { opacity: 1; border-color: rgba(238, 249, 250, 0.8); }
+    #credits {
+      position: fixed; top: 60px; right: 20px; width: min(420px, calc(100vw - 32px)); max-height: calc(100vh - 140px);
+      overflow-y: auto; box-sizing: border-box; padding: 18px 20px; border-radius: 14px;
+      background: rgba(5, 20, 30, 0.88); border: 1px solid rgba(31, 195, 216, 0.35); backdrop-filter: blur(6px);
+      font: 12px/1.75 'Noto Sans SC', sans-serif; letter-spacing: 0.04em; color: var(--dim);
+    }
+    #credits[hidden] { display: none; }
+    #credits h2 { margin: 0 0 10px; font-size: 14px; font-weight: 500; letter-spacing: 0.3em; color: var(--ink); }
+    #credits h3 { margin: 14px 0 4px; font-size: 12px; font-weight: 500; letter-spacing: 0.2em; color: var(--ink); }
+    #credits ul { margin: 0; padding-left: 1.1em; }
+    #credits li { margin: 2px 0; }
+    #credits a { color: #8fe3ee; text-decoration: none; border-bottom: 1px solid rgba(143, 227, 238, 0.35); }
+    #credits a:hover { border-bottom-color: #8fe3ee; }
+    @media (max-width: 600px) {
+      #more { top: 12px; right: 12px; }
+      #credits { top: 54px; right: 16px; }
+    }
+    @media (max-width: 600px) {
+      #hint { left: 16px; bottom: 60px; }
+      #mode { left: 16px; }
+      #chips { right: 16px; bottom: 54px; }
+      #sliders { right: 16px; bottom: 140px; }
+      #concert { bottom: 96px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="intro">
+    <div>
+      <h1>希洛</h1>
+      <div class="en">HILO · NIGHT · RAIN</div>
+      <div id="status">正在加载…</div>
+      <div class="go">点击进入</div>
+    </div>
+  </div>
+  <div id="hint">拖动环顾 · WASD 行走 · 双击 W 奔跑<br />空格 漫步 / 自由 · T 光影 · R 雨量 · M 声音</div>
+  <div id="mode"></div>
+  <div id="concert">长夏乐馆 ♪ <button type="button" data-track="galaxy">银河列车</button><button type="button" data-track="summer">夏夜</button><button type="button" data-track="isle">星屿夜雨</button><button type="button" data-track="fields">萤火原野</button></div>
+  <div id="sliders">
+    <label title="步速：从步行到跑步的 1.5 倍">步速<input id="pace" type="range" min="0" max="1" step="0.01" value="0.5" /></label>
+    <label id="music-row" title="音乐音量">音乐<input id="music" type="range" min="0" max="1" step="0.01" value="0.5" /></label>
+  </div>
+  <div id="chips">
+    <button id="tone" type="button" title="三分光影 / 二分光影（T）">三分光影</button>
+    <button id="rain" type="button" title="雨量（R）">中雨</button>
+    <button id="sound" type="button" title="声音（M）">♪</button>
+  </div>
+  <button id="more" type="button" title="署名与致谢" aria-label="署名与致谢" aria-expanded="false" aria-controls="credits">⋯</button>
+  <div id="credits" hidden>
+    <h2>署名与致谢</h2>
+    <h3>模型</h3>
+    <ul>
+      <li>全息鲸鱼：<a href="https://sketchfab.com/3d-models/blue-whale-textured-d24d19021c724c3a9134eebcb76b0e0f" target="_blank" rel="noopener">“Blue Whale - Textured”</a>，Bohdan Lvov，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>（已改动：姿态、比例、贴图与骨骼）</li>
+      <li>全息小猫：<a href="https://sketchfab.com/3d-models/medium-poly-cat-in-motion-3d-model-free-5c31c77904de4e458d434c167ea0f4bc" target="_blank" rel="noopener">“Medium poly Cat In Motion 3d Model Free”</a>，iRahulRajput，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>（已改动：贴图压缩，动作重做）</li>
+      <li>博物馆化石：<a href="https://sketchfab.com/3d-models/cetotherium-riabinini-assembled-skeleton-8532da04db044d9c8417fcec43053e3a" target="_blank" rel="noopener">“Cetotherium riabinini assembled skeleton”</a>，SchmalhausenEvolMorph；<a href="https://sketchfab.com/3d-models/stegosaurus-skeleton-dc6e1c748484449587b81426d41da6cb" target="_blank" rel="noopener">“Stegosaurus Skeleton”</a>，Artec 3D；均为 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>（已改动：去掉贴图，缩放与摆放）</li>
+    </ul>
+    <h3>图标</h3>
+    <ul>
+      <li><a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>：Lorc、Delapouite，<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a></li>
+      <li><a href="https://fonts.google.com/icons" target="_blank" rel="noopener">Google Material Symbols</a>，Apache License 2.0</li>
+      <li><a href="https://fonts.google.com/noto/specimen/Noto+Emoji" target="_blank" rel="noopener">Google Noto Emoji</a>，SIL Open Font License 1.1</li>
+    </ul>
+    <h3>字体</h3>
+    <ul>
+      <li>Noto Sans SC、Noto Serif SC、ZCOOL QingKe HuangYou、ZCOOL KuaiLe、ZCOOL XiaoWei、Ma Shan Zheng、Rajdhani（<a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a>），SIL Open Font License 1.1</li>
+    </ul>
+    <h3>引擎</h3>
+    <ul>
+      <li><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>，MIT License</li>
+    </ul>
+  </div>
+  <script>
+    // the credits: ⋯ opens and closes them (Esc, or a click elsewhere, closes); its clicks and keys kept from the walk
+    {
+      const more = document.getElementById('more'), panel = document.getElementById('credits');
+      const show = (on) => { panel.hidden = !on; more.setAttribute('aria-expanded', String(on)); };
+      more.addEventListener('click', (e) => { e.stopPropagation(); show(panel.hidden); more.blur(); });
+      for (const el of [more, panel]) el.addEventListener('pointerdown', (e) => e.stopPropagation());
+      addEventListener('pointerdown', () => show(false));
+      addEventListener('keydown', (e) => { if (e.code === 'Escape') show(false); });
+    }
+  </script>
+  <script>
+    // If loading fails (often a stale cached script after an update), say so instead of hanging.
+    const showLoadError = (msg) => {
+      const s = document.getElementById('status');
+      if (s && !document.getElementById('intro').classList.contains('ready')) {
+        s.textContent = '加载出错，请强制刷新（Cmd+Shift+R）· ' + msg;
+      }
+    };
+    addEventListener('error', (e) => showLoadError(e.message || '脚本错误'));
+    addEventListener('unhandledrejection', (e) => showLoadError(String(e.reason?.message || e.reason)));
+  </script>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+{
+  "hue": {
+    "shift": 11,
+    "saturation": 0.89
+  },
+  "tones": {
+    "edge1": 0.17,
+    "edge2": 0.45,
+    "edgeTwo": 0.3,
+    "soft": 0.012,
+    "streetLift": 0.51
+  },
+  "palette": {
+    "deep": "#0b2130",
+    "mid": "#2a7c93",
+    "lit": "#e8f5f5",
+    "litTint": "#a4e7ef",
+    "shade2": "#1a4a61"
+  },
+  "moon": {
+    "elevation": 24.8,
+    "azimuth": 199.2,
+    "strength": 0.75
+  },
+  "air": {
+    "fog": "#000000",
+    "haze": "#3a6178",
+    "density": 0.0013,
+    "zenith": "#040d16"
+  },
+  "rain": {
+    "brightness": 1.7,
+    "litAlpha": 0.9,
+    "midAlpha": 0.43,
+    "darkAlpha": 0.135,
+    "midAt": 0,
+    "litAt": 0.17,
+    "length": 1.29,
+    "speed": 10.5,
+    "wind": 0,
+    "reach": 95,
+    "lit": "#e6f2f2",
+    "mid": "#5fbcd0",
+    "dark": "#2a5c70"
+  },
+  "glass": {
+    "reflect": 0.38,
+    "rooms": 2
+  },
+  "indoor": {
+    "light": 0.34
+  },
+  "fonts": {
+    "signs": "苹方",
+    "brands": "苹方",
+    "metro": "思源黑体",
+    "shopRound": "站酷快乐体",
+    "moonCase": "思源宋体"
+  },
+  "street": {
+    "wet": 1,
+    "reflLo": 0.14,
+    "reflHi": 0.3
+  },
+  "screens": {
+    "dark": "#061a25",
+    "mid": "#1fc3d8",
+    "hot": 2.3,
+    "cases": true,
+    "icons": true,
+    "style": "led",
+    "own": true,
+    "bright": 0.9
+  },
+  "cat": {
+    "faceW": 0.296,
+    "faceH": 0.19,
+    "eyeGap": 0.143,
+    "eyeSize": 0.072,
+    "eyeY": -0.022,
+    "pupil": 0.036,
+    "ears": 0.59,
+    "helmet": 0.37,
+    "body": 0.97,
+    "mouth": 1.03,
+    "whiskers": 0.58,
+    "line": 0.4
+  },
+  "caseColors": {
+    "star-ring": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "float-cafe": {
+      "hue": -17,
+      "saturation": 0.75,
+      "lightness": 1.48
+    },
+    "photon-books": {
+      "hue": -3,
+      "saturation": 0.78,
+      "lightness": 1.35
+    },
+    "deep-blue": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "glow-umbrella": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "neo-metro": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "firefly-garden": {
+      "hue": 0,
+      "saturation": 0.52,
+      "lightness": 1
+    },
+    "tide-energy": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "rain-concert": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "moon-cinema": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "galaxy-link": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "dawn-bakery": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "cloud-gelato": {
+      "hue": -3,
+      "saturation": 0.47,
+      "lightness": 0.96
+    },
+    "pearl-moon": {
+      "hue": -44,
+      "saturation": 0.83,
+      "lightness": 1.5
+    },
+    "meow-store": {
+      "hue": -180,
+      "saturation": 0.75,
+      "lightness": 1.05
+    },
+    "lantern-noodles": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "night-lamp-diner": {
+      "hue": -3,
+      "saturation": 0.55,
+      "lightness": 0.77
+    },
+    "frost-dessert": {
+      "hue": 0,
+      "saturation": 1,
+      "lightness": 1
+    },
+    "spring-mart": {
+      "hue": 1,
+      "saturation": 0.75,
+      "lightness": 0.96
+    }
+  },
+  "ads": {
+    "glyph-rain": 1,
+    "pulse-rings": 1,
+    "equalizer": 1,
+    "sign-word": 1,
+    "star-ring-cat": 1,
+    "neon-horizon": 1,
+    "giant-glyph": 1,
+    "oscilloscope": 1,
+    "ticker": 1,
+    "ribbons": 1,
+    "liquid-blobs": 1,
+    "hex-tunnel": 0.2,
+    "interference": 1,
+    "vortex": 1,
+    "cells": 1,
+    "metro-sign": 1,
+    "vending": 1,
+    "card-draw": 1,
+    "blind-box": 1,
+    "gacha": 1,
+    "brand-star-ring": 1,
+    "brand-float-cafe": 1,
+    "brand-photon-books": 1,
+    "brand-deep-blue": 1,
+    "brand-glow-umbrella": 1,
+    "brand-neo-metro": 1,
+    "brand-firefly-garden": 1,
+    "brand-tide-energy": 1,
+    "brand-rain-concert": 1,
+    "brand-moon-cinema": 1,
+    "brand-galaxy-link": 1,
+    "brand-dawn-bakery": 1,
+    "brand-cloud-gelato": 1,
+    "brand-pearl-moon": 1,
+    "brand-meow-store": 1,
+    "brand-lantern-noodles": 1,
+    "brand-night-lamp-diner": 1,
+    "brand-frost-dessert": 1
+  },
+  "color": {
+    "deep": "#0a1525",
+    "mid": "#38506c",
+    "lit": "#f2ece2",
+    "litTint": "#c4d6f5",
+    "shade2": "#22324a",
+    "fog": "#142030",
+    "haze": "#4d6680",
+    "screenDark": "#05080c",
+    "rainMid": "#8aa4c0",
+    "rainDark": "#2c3c52",
+    "lamp": "#a8deff",
+    "amber": "#ffe357",
+    "coral": "#ff5f7e",
+    "violet": "#9d7dff",
+    "mint": "#6effa6",
+    "cyan": 0.3,
+    "neon": 0.2,
+    "lights": 0.25,
+    "screens": 0.4,
+    "windows": 0.3,
+    "goods": 0.6
+  },
+  "holo": {
+    "whale": "sketchfab"
+  },
+  "post": {
+    "bloom": 0.42,
+    "bloomRadius": 0.45,
+    "bloomThreshold": 1,
+    "bloomFloor": 0.1,
+    "outline": 0.75,
+    "outlineColor": "#030c14",
+    "vignette": 0.55,
+    "grain": 0.025
+  },
+  "savedAt": 1792194842786
+}
