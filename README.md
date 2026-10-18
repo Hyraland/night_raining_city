@@ -1,4 +1,4 @@
-# 希洛 · 夜雨 HILO
+# 希洛市 HILO
 
 A walkable rainy night city in three.js. Created with Claude Opus 5.5.
 

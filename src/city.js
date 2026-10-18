@@ -4821,14 +4821,14 @@ export function buildCity({ atlas, reflection, cases = true, icons = null, caseF
       const gx = nc > 1 ? (NX - 2 * mg - nc * sz) / (nc - 1) : 0, gy = nr > 1 ? (NY - 2 * mg - nr * sz) / (nr - 1) : 0;
       tiles = { mg, sz, gx, gy, nr, nc };
       spin = layout === 'tiles' && across && nr >= 3;
-      const mid = across ? [Math.floor(nr / 2), Math.floor((nc - 4) / 2)] : [Math.floor((nr - 4) / 2), 1];
+      const name = [...B.name].slice(0, 4), nw = name.length;          // (its first four characters, or all of a shorter name)
+      const mid = across ? [Math.floor(nr / 2), Math.floor((nc - nw) / 2)] : [Math.floor((nr - nw) / 2), 1];
       const kinds = Array.from({ length: nr * nc }, (_, i) => (animals || flip ? MEOW_ANIMALS[i % MEOW_ANIMALS.length] : 'cat'));
       for (let i = kinds.length - 1; i > 0; i--) { const j = Rn.int(0, i); [kinds[i], kinds[j]] = [kinds[j], kinds[i]]; }
-      const name = [...B.name];
       for (let r = 0; r < nr; r++) for (let c = 0; c < nc; c++) {
         const cx = mg + sz / 2 + c * (sz + gx), cy = mg + sz / 2 + r * (sz + gy);
         const k = flip ? -1 : across ? (r === mid[0] ? c - mid[1] : -1) : (c === mid[1] ? r - mid[0] : -1);
-        if (k >= 0 && k < 4 && nc * nr >= 6) chars.push([name[k], cx, cy, sz * 0.9]);
+        if (k >= 0 && k < nw && nc * nr >= 6) chars.push([name[k], cx, cy, sz * 0.9]);
         else {
           // (each face a whole number of cells across, its corner on a cell's: so every one falls on the dots alike)
           const n = Math.round(sz * 0.96), at = (v) => Math.round(v - n / 2) + n / 2;
